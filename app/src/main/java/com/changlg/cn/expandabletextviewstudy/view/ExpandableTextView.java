@@ -55,7 +55,8 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
     /* The default alpha value when the animation starts */
     private static final float DEFAULT_ANIM_ALPHA_START = 0.7f;
 
-    protected TextView mTv;
+//    protected TextView mAlignTextView;
+    protected AlignTextView mAlignTextView;
 
     protected ImageButton mButton; // Button to expand/collapse
 
@@ -132,14 +133,14 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
             animation = new ExpandCollapseAnimation(this, getHeight(), mCollapsedHeight);
         } else {
             animation = new ExpandCollapseAnimation(this, getHeight(), getHeight() +
-                    mTextHeightWithMaxLines - mTv.getHeight());
+                    mTextHeightWithMaxLines - mAlignTextView.getHeight());
         }
 
         animation.setFillAfter(true);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                applyAlphaAnimation(mTv, mAnimAlphaStart);
+                applyAlphaAnimation(mAlignTextView, mAnimAlphaStart);
             }
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -150,7 +151,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
 
                 // notify the listener
                 if (mListener != null) {
-                    mListener.onExpandStateChanged(mTv, !mCollapsed);
+                    mListener.onExpandStateChanged(mAlignTextView, !mCollapsed);
                 }
             }
             @Override
@@ -186,23 +187,23 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
         // Setup with optimistic case
         // i.e. Everything fits. No button needed
         mButton.setVisibility(View.GONE);
-        mTv.setMaxLines(Integer.MAX_VALUE);
+        mAlignTextView.setMaxLines(Integer.MAX_VALUE);
 
         // Measure
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         // If the text fits in collapsed mode, we are done.
-        if (mTv.getLineCount() <= mMaxCollapsedLines) {
+        if (mAlignTextView.getLineCount() <= mMaxCollapsedLines) {
             return;
         }
 
         // Saves the text height w/ max lines
-        mTextHeightWithMaxLines = getRealTextViewHeight(mTv);
+        mTextHeightWithMaxLines = getRealTextViewHeight(mAlignTextView);
 
         // Doesn't fit in collapsed mode. Collapse text view as needed. Show
         // button.
         if (mCollapsed) {
-            mTv.setMaxLines(mMaxCollapsedLines);
+            mAlignTextView.setMaxLines(mMaxCollapsedLines);
         }
         mButton.setVisibility(View.VISIBLE);
 
@@ -211,10 +212,10 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
 
         if (mCollapsed) {
             // Gets the margin between the TextView's bottom and the ViewGroup's bottom
-            mTv.post(new Runnable() {
+            mAlignTextView.post(new Runnable() {
                 @Override
                 public void run() {
-                    mMarginBetweenTxtAndBottom = getHeight() - mTv.getHeight();
+                    mMarginBetweenTxtAndBottom = getHeight() - mAlignTextView.getHeight();
                 }
             });
             // Saves the collapsed height of this ViewGroup
@@ -228,7 +229,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
 
     public void setText(@Nullable CharSequence text) {
         mRelayout = true;
-        mTv.setText(text);
+        mAlignTextView.setText(text);
         setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
     }
 
@@ -246,10 +247,10 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
 
     @Nullable
     public CharSequence getText() {
-        if (mTv == null) {
+        if (mAlignTextView == null) {
             return "";
         }
-        return mTv.getText();
+        return mAlignTextView.getText();
     }
 
     private void init(AttributeSet attrs) {
@@ -277,8 +278,8 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
     }
 
     private void findViews() {
-        mTv = (TextView) findViewById(R.id.expandable_text);
-        mTv.setOnClickListener(this);
+        mAlignTextView = (AlignTextView) findViewById(R.id.expandable_text);
+        mAlignTextView.setOnClickListener(this);
         mButton = (ImageButton) findViewById(R.id.expand_collapse);
         mButton.setImageDrawable(mCollapsed ? mExpandDrawable : mCollapseDrawable);
         mButton.setOnClickListener(this);
@@ -292,7 +293,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+//    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private static void applyAlphaAnimation(View view, float alpha) {
         if (isPostHoneycomb()) {
             view.setAlpha(alpha);
@@ -336,9 +337,9 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t) {
             final int newHeight = (int)((mEndHeight - mStartHeight) * interpolatedTime + mStartHeight);
-            mTv.setMaxHeight(newHeight - mMarginBetweenTxtAndBottom);
+            mAlignTextView.setMaxHeight(newHeight - mMarginBetweenTxtAndBottom);
             if (Float.compare(mAnimAlphaStart, 1.0f) != 0) {
-                applyAlphaAnimation(mTv, mAnimAlphaStart + interpolatedTime * (1.0f - mAnimAlphaStart));
+                applyAlphaAnimation(mAlignTextView, mAnimAlphaStart + interpolatedTime * (1.0f - mAnimAlphaStart));
             }
             mTargetView.getLayoutParams().height = newHeight;
             mTargetView.requestLayout();

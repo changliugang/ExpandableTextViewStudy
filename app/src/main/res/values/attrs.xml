@@ -7,4 +7,13 @@
         <attr name="expandDrawable" format="reference"/>
         <attr name="collapseDrawable" format="reference"/>
     </declare-styleable>
+
+    <!-- 末行对齐方式 -->
+    <declare-styleable name="AlignTextView">
+        <attr name="align" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+    </declare-styleable>
 </resources>

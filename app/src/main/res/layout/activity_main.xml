@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,8 +10,54 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.changlg.cn.expandabletextviewstudy.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!-- animDuration :  闭合展开动画时间 -->
+        <!-- collapseDrawable :  表示可闭合的图标，此时处于展开状态 -->
+        <!-- expandDrawable :  表示可展开的图标，此时处于闭合状态 -->
+        <!-- maxCollapsedLines :  显示几行，实际行数少于此数则没有展开闭合功能 -->
+        <com.changlg.cn.expandabletextviewstudy.view.ExpandableTextView
+            android:id="@+id/expand_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            expandableTextView:animDuration="100"
+            expandableTextView:collapseDrawable="@mipmap/ic_launcher"
+            expandableTextView:expandDrawable="@drawable/ic_expand_more_black_16dp"
+            expandableTextView:maxCollapsedLines="3">
+
+            <com.changlg.cn.expandabletextviewstudy.view.AlignTextView
+                android:id="@id/expandable_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#666666"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@id/expand_collapse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:background="@android:color/transparent"
+                android:padding="16dp" />
+        </com.changlg.cn.expandabletextviewstudy.view.ExpandableTextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/dummy_text3"
+            android:textColor="#666666"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+
 </RelativeLayout>
